@@ -1,20 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import ValuePillars from "@/components/home/ValuePillars";
 import ProductGrid from "@/components/product/ProductGrid";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import { filterProducts } from "@/lib/filterProducts";
 import CollectionIntro from "@/components/common/CollectionIntro";
-import { saleMensApparel } from "@/app/data/saleMensApparel";
 ;
 
 export default function SaleMensApparelPage() {
-    const [filters, setFilters] = useState<AppliedFilters>({});
-
-    const filteredProducts = filterProducts(saleMensApparel, {
-        filters,
-    });
+    const [products, setProducts] = useState<Product[]>([]);
+    
+        useEffect(() => {
+            fetch(
+                "http://localhost:5000/products?gender=men&category=apparel,socks&sale=true"
+            )
+                .then((res) => res.json())
+                .then((data) => setProducts(data));
+        }, []);
+    
+        const [filters, setFilters] = useState<AppliedFilters>({});
+    
+        const filteredProducts = filterProducts(products, {
+            filters,
+        });
     return (
         <main className="bg-[#ece9e2] px-3 pt-[40px] pb-0">
             <section className="mx-auto max-w-[1880px]">

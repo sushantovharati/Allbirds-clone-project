@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import { filterProducts } from "@/lib/filterProducts";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import ValuePillars from "@/components/home/ValuePillars";
 import FeatureBanners from "@/components/common/FeatureBanners";
 import SlippersHero from "@/components/womens-slippers/slippersHero";
-import { womensSlippers } from "@/app/data/womensSlippers";
 
 
 const banners = [
@@ -39,9 +39,19 @@ const banners = [
 
 
 export default function MensVarsityCollectionPage() {
+    const [products, setProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        fetch(
+            "http://localhost:5000/products?gender=women&family=slipper"
+        )
+            .then((res) => res.json())
+            .then((data) => setProducts(data));
+    }, []);
+
     const [filters, setFilters] = useState<AppliedFilters>({});
 
-    const filteredProducts = filterProducts(womensSlippers, {
+    const filteredProducts = filterProducts(products, {
         filters,
     });
     return (

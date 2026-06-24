@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import ValuePillars from "@/components/home/ValuePillars";
 import ProductGrid from "@/components/product/ProductGrid";
 import CollectionHero from "@/components/common/CollectionHero";
 import FAQSection from "@/components/common/FAQSection";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import { filterProducts } from "@/lib/filterProducts";
-import { womensLoungers } from "@/app/data/womensLoungers";
 
 
 const womensFaqs = [
@@ -27,9 +27,19 @@ const womensFaqs = [
 
 
 export default function WomensLoungersPage() {
+    const [products, setProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        fetch(
+                "http://localhost:5000/products?gender=women&family=tree-dasher-relay,tree-runner-nz,runner-nz,runner-go,dasher-nz"
+            )
+            .then((res) => res.json())
+            .then((data) => setProducts(data));
+    }, []);
+
     const [filters, setFilters] = useState<AppliedFilters>({});
 
-    const filteredProducts = filterProducts(womensLoungers, {
+    const filteredProducts = filterProducts(products, {
         filters,
     });
 

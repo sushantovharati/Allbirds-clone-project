@@ -5,7 +5,7 @@ interface ProductCardProps {
   slug: string;
   title: string;
   color: string;
-  price: string;
+  price: number;
   image: string;
   badge?: string;
   productType?: string;
@@ -49,7 +49,7 @@ export default function ProductCard({
         <p className="mt-1 text-gray-600">{color}</p>
 
         {!sale && (
-          <p className="mt-2 font-bold">{price}</p>
+          <p className="mt-2 font-bold">${price}</p>
         )}
       </div>
     </Link>

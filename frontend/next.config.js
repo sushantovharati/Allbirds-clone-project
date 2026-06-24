@@ -3,6 +3,12 @@ const nextConfig = {
   images: {
     remotePatterns: [
       {
+        protocol: "http",
+        hostname: "localhost",
+        port: "5000",
+        pathname: "/uploads/products/**",
+      },
+      {
         protocol: "https",
         hostname: "www.allbirds.com",
       },

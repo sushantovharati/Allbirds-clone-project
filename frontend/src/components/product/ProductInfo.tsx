@@ -1,23 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cartContext";
-import { allProducts } from "@/app/data/allProducts";
 
 type Product = {
   slug: string;
   family: string;
   gender: string;
   title: string;
-  price: string;
-  color: string;
+  price: number;
+  color: {
+    name: string;
+    group: string;
+    code: string;
+  };
   edition?: string;
-  colors: string[];
   sizes: string[];
-  images: string[];
+  images: {
+    url: string;
+    filename: string;
+  }[];
   sale?: boolean;
   discountPercent?: number;
+  productTypes: string[];
 };
 
 type Props = {
@@ -28,9 +34,51 @@ export default function ProductInfo({ product }: Props) {
   const router = useRouter();
   const { addItem } = useCart();
 
+  const [relatedProducts, setRelatedProducts] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetch(
+      `http://localhost:5000/products/related-colors?title=${encodeURIComponent(
+        product.title
+      )}&gender=${product.gender}`
+    )
+      .then((res) => res.json())
+      .then((data) => setRelatedProducts(data));
+  }, [product.title, product.gender]);
+
+
+  const [oppositeSlug, setOppositeSlug] = useState<string | null>(null);
+
+  function getOppositeSlug(slug: string) {
+    if (slug.startsWith("mens-")) {
+      return slug.replace("mens-", "womens-");
+    }
+
+    if (slug.startsWith("womens-")) {
+      return slug.replace("womens-", "mens-");
+    }
+
+    return null;
+  }
+
+  useEffect(() => {
+    const targetSlug = getOppositeSlug(product.slug);
+
+    if (!targetSlug) {
+      setOppositeSlug(null);
+      return;
+    }
+
+    fetch(`http://localhost:5000/products/slug-exists/${targetSlug}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setOppositeSlug(data.exists ? data.slug : null);
+      });
+  }, [product.slug]);
+
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
 
-  const priceNumber = Number(product.price.replace("$", ""));
+  const priceNumber = product.price;
 
   const salePrice =
     product.sale && product.discountPercent
@@ -42,33 +90,20 @@ export default function ProductInfo({ product }: Props) {
 
   const isFreeShipping = salePrice > 100;
 
-  const relatedProducts = allProducts.filter(
-    (item) =>
-      item.title.trim().toLowerCase() ===
-      product.title.trim().toLowerCase() &&
-      item.gender === product.gender
-  );
-
-  const menVersion = allProducts.find(
-    (item) => item.family === product.family && item.gender === "men"
-  );
-
-  const womenVersion = allProducts.find(
-    (item) => item.family === product.family && item.gender === "women"
-  );
-
   const handleAddToCart = () => {
     if (!selectedSize) return;
 
     addItem({
       id: product.slug,
       name: product.title,
-      price: Number(product.price.replace("$", "")),
+      price: salePrice,
       color: product.edition
-        ? `${product.color} (${product.edition})`
-        : product.color,
+        ? `${product.color.name} (${product.edition})`
+        : product.color.name,
       size: selectedSize,
-      image: product.images[0],
+      image: product.images[0]?.url?.startsWith("http")
+        ? product.images[0].url
+        : `http://localhost:5000${product.images[0]?.url}`,
       quantity: 1,
     });
   };
@@ -85,12 +120,8 @@ export default function ProductInfo({ product }: Props) {
           <button
             type="button"
             onClick={() => {
-              if (product.gender === "men" && womenVersion) {
-                router.push(`/products/${womenVersion.slug}`);
-              }
-
-              if (product.gender === "women" && menVersion) {
-                router.push(`/products/${menVersion.slug}`);
+              if (oppositeSlug) {
+                router.push(`/products/${oppositeSlug}`);
               }
             }}
             className="cursor-pointer underline"
@@ -107,7 +138,7 @@ export default function ProductInfo({ product }: Props) {
               </span>
 
               <span className="text-lg text-[#777] line-through">
-                {product.price}
+                ${product.price}
               </span>
 
               <span className="text-sm text-[#b21f1f]">
@@ -116,7 +147,7 @@ export default function ProductInfo({ product }: Props) {
             </>
           ) : (
             <span className="text-lg font-medium uppercase tracking-wider text-black">
-              {product.price}
+              ${product.price}
             </span>
           )}
 
@@ -133,7 +164,7 @@ export default function ProductInfo({ product }: Props) {
         <p className="font-mono text-xs uppercase tracking-wider text-black md:text-sm">
           Color:{" "}
           <span className="font-sans normal-case tracking-normal text-[#555]">
-            {product.color}
+            {product.color.name}
           </span>
 
           {product.edition && (
@@ -155,12 +186,12 @@ export default function ProductInfo({ product }: Props) {
                     : `/products/${item.slug}`
                 )
               }
-              aria-label={`Select ${item.color}`}
+              aria-label={`Select ${item.color.name}`}
               className={`h-9 w-9 rounded-full border transition ${product.slug === item.slug
                 ? "border-2 border-black ring-2 ring-black ring-offset-2"
                 : "border-gray-300 hover:border-black"
                 }`}
-              style={{ backgroundColor: item.colors[0] }}
+              style={{ backgroundColor: item.color.code }}
             />
           ))}
         </div>
@@ -168,7 +199,7 @@ export default function ProductInfo({ product }: Props) {
 
       <div>
         <div className="flex gap-4 text-sm uppercase">
-          <button
+          {/* <button
             type="button"
             onClick={() => {
               if (product.gender !== "men" && menVersion) {
@@ -181,9 +212,9 @@ export default function ProductInfo({ product }: Props) {
               }`}
           >
             Men's Sizes
-          </button>
+          </button> */}
 
-          <button
+          {/* <button
             type="button"
             onClick={() => {
               if (product.gender !== "women" && womenVersion) {
@@ -196,7 +227,7 @@ export default function ProductInfo({ product }: Props) {
               }`}
           >
             Women's Sizes
-          </button>
+          </button> */}
         </div>
 
         <ul className="mt-4 grid grid-cols-5 gap-2">
@@ -235,7 +266,7 @@ export default function ProductInfo({ product }: Props) {
           {selectedSize ? (
             <>
               Add to Cart <span className="mx-1">-</span>
-              <span>{product.price}</span>
+              <span>${product.price}</span>
             </>
           ) : (
             "Select A Size"

@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import { filterProducts } from "@/lib/filterProducts";
 import CollectionHero from "@/components/common/CollectionHero";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import FeatureBanners from "@/components/common/FeatureBanners";
 import ValuePillars from "@/components/home/ValuePillars";
-import { mensDasherNzCl } from "@/app/data/mensDasherNzCl";
 import ProductGrid from "@/components/product/ProductGrid";
 import DasherCard from "@/components/mens-dasher-nz-cl/DasherCard";
 
@@ -39,9 +39,19 @@ const banners = [
 ];
 
 export default function MensDasherNzClPage() {
+    const [products, setProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        fetch(
+            "http://localhost:5000/products?gender=men&family=dasher-nz"
+        )
+            .then((res) => res.json())
+            .then((data) => setProducts(data));
+    }, []);
+
     const [filters, setFilters] = useState<AppliedFilters>({});
 
-    const filteredProducts = filterProducts(mensDasherNzCl, {
+    const filteredProducts = filterProducts(products, {
         filters,
     });
     return (

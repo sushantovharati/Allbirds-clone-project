@@ -1,21 +1,26 @@
 "use client";
-
-import { useState } from "react";
-// import ProductGrid from "@/components/shop-all/ProductGrid";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import CollectionCards from "@/components/new-arrivals/CollectionCards";
 import ValuePillars from "@/components/home/ValuePillars";
-import { newArrivals } from "@/app/data/newArrivals";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import { filterProducts } from "@/lib/filterProducts";
 import ProductGrid from "@/components/product/ProductGrid";
 
 export default function NewArrivalsPage() {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+  fetch("http://localhost:5000/products?badge=NEW")
+    .then((res) => res.json()) 
+    .then((data) => setProducts(data));
+}, []);
 
   const [filters, setFilters] = useState<AppliedFilters>({});
 
-  const filteredProducts = filterProducts(newArrivals, {
-    filters,
-  });
+  const filteredProducts = filterProducts(products, {
+  filters, 
+});
 
   return (
     <main className="bg-[#ece9e2] px-6 pb-10 pt-32">

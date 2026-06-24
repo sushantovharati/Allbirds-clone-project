@@ -7,7 +7,10 @@ import { X } from "lucide-react";
 type Product = {
   title: string;
   badge?: string;
-  images: string[];
+  images: {
+    url: string;
+    filename: string;
+  }[];
 };
 
 type Props = {
@@ -27,11 +30,21 @@ export default function ProductGallery({ product }: Props) {
         )}
 
         <button
-          onClick={() => setActiveImage(product.images[0])}
+          onClick={() =>
+            setActiveImage(
+              product.images[0]?.url?.startsWith("http")
+                ? product.images[0].url
+                : `http://localhost:5000${product.images[0]?.url}`
+            )
+          }
           className="relative h-[550px] w-full"
         >
           <Image
-            src={product.images[0]}
+            src={
+              product.images[0]?.url?.startsWith("http")
+                ? product.images[0].url
+                : `http://localhost:5000${product.images[0]?.url}`
+            }
             alt={product.title}
             fill
             priority
@@ -42,13 +55,22 @@ export default function ProductGallery({ product }: Props) {
         <div className="grid grid-cols-2">
           {product.images.slice(1).map((image, index) => (
             <button
-              key={image}
-              onClick={() => setActiveImage(image)}
+              key={image.url}
+              onClick={() =>
+                setActiveImage(
+                  image.url.startsWith("http")
+                    ? image.url
+                    : `http://localhost:5000${image.url}`
+                )
+              }
               className="relative h-[360px] w-full"
             >
               <Image
-                src={image}
-                // alt={`${product.title} ${index + 2}`}
+                src={
+                  image.url.startsWith("http")
+                    ? image.url
+                    : `http://localhost:5000${image.url}`
+                }
                 alt=" "
                 fill
                 className="object-cover scale-115"

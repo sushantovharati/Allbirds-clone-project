@@ -1,18 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import ValuePillars from "@/components/home/ValuePillars";
 import ProductGrid from "@/components/product/ProductGrid";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import { filterProducts } from "@/lib/filterProducts";
 import CollectionIntro from "@/components/common/CollectionIntro";
-import { saleWomens } from "@/app/data/saleWomens";
 ;
 
 export default function SaleWomensPage() {
+    const [products, setProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        fetch(
+            "http://localhost:5000/products?gender=women&sale=true"
+        )
+            .then((res) => res.json())
+            .then((data) => setProducts(data));
+    }, []);
+
     const [filters, setFilters] = useState<AppliedFilters>({});
 
-    const filteredProducts = filterProducts(saleWomens, {
+    const filteredProducts = filterProducts(products, {
         filters,
     });
     return (

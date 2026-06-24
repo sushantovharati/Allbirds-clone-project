@@ -1,17 +1,27 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import ProductGrid from "@/components/product/ProductGrid";
 import ValuePillars from "@/components/home/ValuePillars";
-import { womensBestsellers } from "@/app/data/womensBestsellers";
 import CollectionHero from "@/components/common/CollectionHero";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import { filterProducts } from "@/lib/filterProducts";
 
 export default function WomensBestsellersPage() {
+    const [products, setProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        fetch(
+            "http://localhost:5000/products?gender=women&badge=NEW,BESTSELLER"
+        )
+            .then((res) => res.json())
+            .then((data) => setProducts(data));
+    }, []);
+
     const [filters, setFilters] = useState<AppliedFilters>({});
 
-    const filteredProducts = filterProducts(womensBestsellers, {
+    const filteredProducts = filterProducts(products, {
         filters,
     });
     return (

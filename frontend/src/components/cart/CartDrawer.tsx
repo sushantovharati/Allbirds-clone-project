@@ -22,15 +22,13 @@ export default function CartDrawer({
     <>
       <div
         onClick={onClose}
-        className={`fixed inset-0 z-[1000] bg-black/50 transition-opacity ${
-          open ? "visible opacity-100" : "invisible opacity-0"
-        }`}
+        className={`fixed inset-0 z-[1000] bg-black/50 transition-opacity ${open ? "visible opacity-100" : "invisible opacity-0"
+          }`}
       />
 
       <aside
-        className={`fixed right-0 top-0 z-[1001] flex h-screen w-full max-w-[531px] flex-col bg-white shadow-xl transition-transform duration-300 ${
-          open ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed right-0 top-0 z-[1001] flex h-screen w-full max-w-[531px] flex-col bg-white shadow-xl transition-transform duration-300 ${open ? "translate-x-0" : "translate-x-full"
+          }`}
       >
         <div className="flex flex-col px-2.5 pt-1.5 pb-2.5">
           <div className="relative flex w-full items-center justify-between">
@@ -223,9 +221,11 @@ export default function CartDrawer({
                 </div>
               </div>
 
-              <button className="w-full rounded-full border border-black bg-black py-4 text-sm font-bold uppercase tracking-wider text-white hover:bg-white hover:text-black">
-                Proceed To Checkout
-              </button>
+              <Link href="/checkout" onClick={onClose}>
+                <button className="w-full rounded-full border border-black bg-black py-4 text-sm font-bold uppercase tracking-wider text-white hover:bg-white hover:text-black">
+                  Proceed To Checkout
+                </button>
+              </Link>
             </div>
 
             <div className="px-2.5 pb-3.5">

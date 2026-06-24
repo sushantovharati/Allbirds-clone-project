@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import ProductGrid from "@/components/product/ProductGrid";
 import ValuePillars from "@/components/home/ValuePillars";
 import CollectionHero from "@/components/common/CollectionHero";
 import FAQSection from "@/components/common/FAQSection";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import { filterProducts } from "@/lib/filterProducts";
-import { mensSneakers } from "@/app/data/mensSneakers";
 
 
 const mensFaqs = [
@@ -29,11 +29,21 @@ const mensFaqs = [
 
 export default function MensSneakersPage() {
 
-  const [filters, setFilters] = useState<AppliedFilters>({});
-
-  const filteredProducts = filterProducts(mensSneakers, {
-    filters,
-  });
+  const [products, setProducts] = useState<Product[]>([]);
+  
+      useEffect(() => {
+          fetch(
+              "http://localhost:5000/products?gender=men&family=dasher-nz,cruiser,canvas-cruiser,terralux-cl,tree-dasher-relay,tree-runner-nz,trino-cozy-crew,men-varsity"
+          )
+              .then((res) => res.json())
+              .then((data) => setProducts(data));
+      }, []);
+  
+      const [filters, setFilters] = useState<AppliedFilters>({});
+  
+      const filteredProducts = filterProducts(products, {
+          filters,
+      });
 
   return (
     <main className="bg-[#ece9e2] px-3 pt-[40px] pb-0">

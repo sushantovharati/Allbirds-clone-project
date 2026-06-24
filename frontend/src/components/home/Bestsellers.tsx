@@ -1,12 +1,18 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRef } from "react";
-import { bestsellers } from "@/app/data/bestsellers";
 
 export default function BestSellers() {
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  const [products, setProducts] = useState<any[]>([]);
+  useEffect(() => {
+    fetch("http://localhost:5000/products?badge=NEW")
+      .then((res) => res.json())
+      .then((data) => setProducts(data.slice(0, 6)));
+  }, []);
 
   const scrollLeft = () => {
     sliderRef.current?.scrollBy({
@@ -59,9 +65,9 @@ export default function BestSellers() {
           [&::-webkit-scrollbar]:hidden
         "
       >
-        {bestsellers.map((product, index) => (
+        {products.map((product, index) => (
           <Link
-            key={`${product.slug}-${product.color}-${index}`}
+            key={product.slug}
             href={`/products/${product.slug}`}
             className="group min-w-[360px] flex-1 overflow-hidden rounded-[18px] bg-white"
           >
@@ -73,7 +79,11 @@ export default function BestSellers() {
               )}
 
               <img
-                src={product.images[0]}
+                src={
+                  product.images[0]?.url?.startsWith("http")
+                    ? product.images[0].url
+                    : `http://localhost:5000${product.images[0]?.url}`
+                }
                 alt={product.title}
                 className="h-full w-full object-contain transition-transform duration-700 ease-out group-hover:scale-105"
               />
@@ -84,25 +94,12 @@ export default function BestSellers() {
                 {product.title}
               </h3>
 
-              <p className="mt-2 text-[17px]">{product.color}</p>
+              <p className="mt-2 text-[17px]">{product.color.name}</p>
 
               <div className="mt-4 flex items-center justify-between">
-                {/* <div className="flex gap-2">
-                  {product.colors.slice(0, 4).map((color, idx) => (
-                    <div
-                      key={idx}
-                      className="h-8 w-8 rounded-full border border-black p-1"
-                    >
-                      <div
-                        className="h-full w-full rounded-full"
-                        style={{ backgroundColor: color }}
-                      />
-                    </div>
-                  ))}
-                </div> */}
 
                 <p className="text-[18px] font-bold">
-                  {product.price}
+                  ${product.price}
                 </p>
               </div>
             </div>

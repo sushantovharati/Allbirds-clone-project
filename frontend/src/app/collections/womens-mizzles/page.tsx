@@ -1,18 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import { filterProducts } from "@/lib/filterProducts";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import ValuePillars from "@/components/home/ValuePillars";
 import ProductGrid from "@/components/product/ProductGrid";
-import { womensMizzles } from "@/app/data/womensMizzles";
 import WomensMizzlesHero from "@/components/womens-mizzles/WomensMizzlesHero";
 
 
 export default function WomensAllWeatherCollectionsPage() {
+    const [products, setProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        fetch(
+            "http://localhost:5000/products?gender=women&family=wool-runner-up-mizzle"
+        )
+            .then((res) => res.json())
+            .then((data) => setProducts(data));
+    }, []);
+
     const [filters, setFilters] = useState<AppliedFilters>({});
 
-    const filteredProducts = filterProducts(womensMizzles, {
+    const filteredProducts = filterProducts(products, {
         filters,
     });
     return (

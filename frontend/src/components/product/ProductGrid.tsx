@@ -4,12 +4,23 @@ import { ReactNode } from "react";
 interface Product {
   slug: string;
   title: string;
-  color: string;
-  price: string;
-  images: string[];
+  price: number;
+
+  color: {
+    name: string;
+    group: string;
+    code: string;
+  };
+
+  images: {
+    url: string;
+    filename: string;
+  }[];
+
   badge?: string;
-  productType?:string;
   sale?: boolean;
+
+  productTypes: string[];
 }
 
 interface ProductGridProps {
@@ -24,19 +35,29 @@ export default function ProductGrid({ products, promoCard }: ProductGridProps) {
 
         {promoCard}
 
-        {products.map((product) => (
-          <ProductCard
-            key={product.slug}
-            slug={product.slug}
-            title={product.title}
-            color={product.color}
-            price={product.price}
-            image={product.images[0]}
-            badge={product.badge}
-            productType={product.productType}
-            sale={product.sale}
-          />
-        ))}
+        {products.map((product) => {
+          // console.log(product.images);
+          // console.log(product.title);
+          // console.log(product.images[0]?.url);
+
+          return (
+            <ProductCard
+              key={product.slug}
+              slug={product.slug}
+              title={product.title}
+              color={product.color.name}
+              price={product.price}
+              image={
+                product.images[0]?.url?.startsWith("http")
+                  ? product.images[0].url
+                  : `http://localhost:5000${product.images[0]?.url}`
+              }
+              badge={product.badge}
+              productType={product.productTypes?.[0]}
+              sale={product.sale}
+            />
+          );
+        })}
       </div>
     </div>
   );

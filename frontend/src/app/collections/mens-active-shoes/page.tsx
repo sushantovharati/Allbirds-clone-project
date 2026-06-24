@@ -1,20 +1,30 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import { filterProducts } from "@/lib/filterProducts";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import ValuePillars from "@/components/home/ValuePillars";
 import ProductGrid from "@/components/product/ProductGrid";
-import { mensActiveshoes } from "@/app/data/mensActiveShoes";
 import MensActiveShoesHero from "@/components/mensActiveShoes/MensActiveShoesHero";
 
 
 export default function MensActiveShoesPage() {
-    const [filters, setFilters] = useState<AppliedFilters>({});
-
-    const filteredProducts = filterProducts(mensActiveshoes, {
-        filters,
-    });
+    const [products, setProducts] = useState<Product[]>([]);
+    
+        useEffect(() => {
+            fetch(
+                "http://localhost:5000/products?gender=men&family=anytime-ankle-sock,runner-go,runner-nz,tree-dasher-relay,dasher-nz,cruiser,men-varsity"
+            )
+                .then((res) => res.json())
+                .then((data) => setProducts(data));
+        }, []);
+    
+        const [filters, setFilters] = useState<AppliedFilters>({});
+    
+        const filteredProducts = filterProducts(products, {
+            filters,
+        });
 
     return (
         <>

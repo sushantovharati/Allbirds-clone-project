@@ -1,16 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import ProductToolbar from "@/components/mens-sneakers/ProductToolbar";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import ProductGrid from "@/components/product/ProductGrid";
 import ValuePillars from "@/components/home/ValuePillars";
 import CollectionHero from "@/components/common/CollectionHero";
-import { womens } from "@/app/data/womens";
-import WomensFAQ from "@/components/womens-new-arrivals/WomensFAQ";
 import FAQSection from "@/components/common/FAQSection";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import { filterProducts } from "@/lib/filterProducts";
-import { womensSneakers } from "@/app/data/womensSneakers";
 
 
 const womensFaqs = [
@@ -30,11 +27,21 @@ const womensFaqs = [
 
 
 export default function WomensSneakersPage() {
-  const [filters, setFilters] = useState<AppliedFilters>({});
+  const [products, setProducts] = useState<Product[]>([]);
 
-  const filteredProducts = filterProducts(womensSneakers, {
-    filters,
-  });
+    useEffect(() => {
+        fetch(
+              "http://localhost:5000/products?gender=women&family=dasher-nz,cruiser,canvas-cruiser,terralux-cl,tree-dasher-relay,tree-runner-nz,trino-cozy-crew,women-varsity"
+          )
+            .then((res) => res.json())
+            .then((data) => setProducts(data));
+    }, []);
+
+    const [filters, setFilters] = useState<AppliedFilters>({});
+
+    const filteredProducts = filterProducts(products, {
+        filters,
+    });
   return (
     <main className="bg-[#ece9e2] px-3 pt-[40px] pb-0">
       <section className="mx-auto max-w-[1880px]">

@@ -1,22 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import ProductGrid from "@/components/product/ProductGrid";
 import CollectionCards from "@/components/new-arrivals/CollectionCards";
 import ValuePillars from "@/components/home/ValuePillars";
 import CollectionToolbar, {
   AppliedFilters,
 } from "@/components/common/CollectionToolbar";
-import { allProducts } from "@/app/data/allProducts";
 
 import { filterProducts } from "@/lib/filterProducts";
 
 export default function ShopAllPage() {
-  const [filters, setFilters] = useState<AppliedFilters>({});
+  const [products, setProducts] = useState<Product[]>([]);
 
-  const filteredProducts = filterProducts(allProducts, {
-  filters,
-});
+    useEffect(() => {
+        fetch(
+            "http://localhost:5000/products?gender=men,women,unisex"
+        )
+            .then((res) => res.json())
+            .then((data) => setProducts(data));
+    }, []);
+
+    const [filters, setFilters] = useState<AppliedFilters>({});
+
+    const filteredProducts = filterProducts(products, {
+        filters,
+    });
 
   return (
     <main className="bg-[#ece9e2] px-6 pb-10 pt-32">

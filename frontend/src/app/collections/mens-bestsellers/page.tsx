@@ -1,19 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import ProductGrid from "@/components/product/ProductGrid";
 import ValuePillars from "@/components/home/ValuePillars";
-import { mensBestsellers } from "@/app/data/mensBestsellers";
 import CollectionToolbar, { AppliedFilters } from "@/components/common/CollectionToolbar";
 import { filterProducts } from "@/lib/filterProducts";
 import CollectionHero from "@/components/common/CollectionHero";
 
 export default function MensBestsellersPage() {
-  const [filters, setFilters] = useState<AppliedFilters>({});
+  const [products, setProducts] = useState<Product[]>([]);
 
-  const filteredProducts = filterProducts(mensBestsellers, {
-    filters,
-  });
+    useEffect(() => {
+        fetch(
+            "http://localhost:5000/products?gender=men&badge=NEW"
+        )
+            .then((res) => res.json())
+            .then((data) => setProducts(data));
+    }, []);
+
+    const [filters, setFilters] = useState<AppliedFilters>({});
+
+    const filteredProducts = filterProducts(products, {
+        filters,
+    });
   return (
     <main className="bg-[#ece9e2] px-3 pt-[40px] pb-0">
       <section className="mx-auto max-w-[1880px]">
@@ -39,7 +49,7 @@ export default function MensBestsellersPage() {
           gender="men"
           collectionType="bestsellers"
         />
-        <ProductGrid products={mensBestsellers} />
+        <ProductGrid products={filteredProducts} />
         <ValuePillars />
       </section>
     </main>

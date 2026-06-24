@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Product } from "@/lib/filterProducts";
 import ValuePillars from "@/components/home/ValuePillars";
 import ProductGrid from "@/components/product/ProductGrid";
-import { mensNewArrivals } from "@/app/data/mensNewArrivals";
 import CollectionHero from "@/components/common/CollectionHero";
 import CollectionToolbar, { AppliedFilters, } from "@/components/common/CollectionToolbar";
 import { filterProducts } from "@/lib/filterProducts";
@@ -29,11 +29,21 @@ const faqs = [
 ];
 
 export default function MensNewArrivalsPage() {
-  const [filters, setFilters] = useState<AppliedFilters>({});
+  const [products, setProducts] = useState<Product[]>([]);
 
-  const filteredProducts = filterProducts(mensNewArrivals, {
-    filters,
-  });
+    useEffect(() => {
+        fetch(
+            "http://localhost:5000/products?gender=men&badge=NEW"
+        )
+            .then((res) => res.json())
+            .then((data) => setProducts(data));
+    }, []);
+
+    const [filters, setFilters] = useState<AppliedFilters>({});
+
+    const filteredProducts = filterProducts(products, {
+        filters,
+    });
 
   return (
     <main className="bg-[#ece9e2] px-3 pb-0 pt-[40px]">
