@@ -10,6 +10,7 @@ export type CartItem = {
   size: string;
   image: string;
   quantity: number;
+  category: "apparel" | "shoes" | "socks";
 };
 
 type CartContextType = {

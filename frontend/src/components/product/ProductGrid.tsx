@@ -36,9 +36,6 @@ export default function ProductGrid({ products, promoCard }: ProductGridProps) {
         {promoCard}
 
         {products.map((product) => {
-          // console.log(product.images);
-          // console.log(product.title);
-          // console.log(product.images[0]?.url);
 
           return (
             <ProductCard

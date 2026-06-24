@@ -1,8 +1,7 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
-
 import ValuePillars from "@/components/home/ValuePillars";
 import ProductGrid from "@/components/product/ProductGrid";
 
@@ -79,6 +78,16 @@ export default function SearchBox() {
               placeholder="What are you looking for?"
               className="h-10 flex-1 bg-transparent text-[20px] text-[#6b5f57] outline-none placeholder:text-[#6b5f57]"
             />
+
+            {search && (
+              <button
+                type="button"
+                onClick={() => setSearch("")}
+                className="mr-3 text-[#6b5f57]"
+              >
+                <X size={20} />
+              </button>
+            )}
 
             <button type="button" className="pb-2">
               <Search size={22} strokeWidth={1.8} />

@@ -4,8 +4,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { X, Trash2 } from "lucide-react";
 import { useCart } from "@/lib/cartContext";
+import { useEffect, useState } from "react";
+
 
 export default function CartDrawer({
+
   open,
   onClose,
 }: {
@@ -13,6 +16,35 @@ export default function CartDrawer({
   onClose: () => void;
 }) {
   const { items, count, total, removeItem, updateQuantity } = useCart();
+
+  const [recommended, setRecommended] = useState<any>(null);
+
+  useEffect(() => {
+    if (!items.length) return;
+
+    const categories = [...new Set(items.map((item) => item.category))];
+
+    let recommendedCategory = "shoes";
+
+    if (categories.length === 1) {
+      if (categories[0] === "shoes") recommendedCategory = "socks";
+      if (categories[0] === "socks") recommendedCategory = "shoes";
+      if (categories[0] === "apparel") recommendedCategory = "shoes";
+    }
+
+    fetch(
+      `http://localhost:5000/products?category=${recommendedCategory}&badge=NEW`
+    )
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.length) {
+          const random =
+            data[Math.floor(Math.random() * data.length)];
+
+          setRecommended(random);
+        }
+      });
+  }, [items]);
 
   const freeShippingTarget = 100;
   const progress = Math.min((total / freeShippingTarget) * 100, 100);
@@ -184,25 +216,36 @@ export default function CartDrawer({
                 <h3 className="mb-3 text-xs uppercase tracking-wider">
                   Recommended for you
                 </h3>
+                {recommended && (
+                  <div className="rounded-[10px] border border-gray-200 bg-white p-2.5">
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src={recommended.images?.[0]?.url}
+                        alt={recommended.title}
+                        width={80}
+                        height={80}
+                        className="size-20 rounded object-cover"
+                      />
 
-                <div className="rounded-[10px] border border-gray-200 bg-white p-2.5">
-                  <div className="flex items-center gap-3">
-                    <div className="size-20 rounded bg-[#f3f1ec]" />
+                      <div className="flex-1">
+                        <div className="mb-2 flex justify-between">
+                          <p className="text-sm text-[#555]">
+                            {recommended.title}
+                          </p>
 
-                    <div className="flex-1">
-                      <div className="mb-2 flex justify-between">
-                        <p className="text-sm text-[#555]">
-                          Anytime No Show Sock
-                        </p>
-                        <p className="text-sm font-medium">$14</p>
+                          <p className="text-sm font-medium">
+                            ${recommended.price}
+                          </p>
+                        </div>
+
+                        <button className="text-sm font-medium underline">
+                          Add+
+                        </button>
                       </div>
-
-                      <button className="text-sm font-medium underline">
-                        Add+
-                      </button>
                     </div>
                   </div>
-                </div>
+                )}
+
               </div>
             </div>
 

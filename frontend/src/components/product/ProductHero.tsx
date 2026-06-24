@@ -26,6 +26,7 @@ type Product = {
     sale?: boolean;
     discountPercent?: number;
     productTypes: string[];
+    category: "apparel" | "shoes" | "socks";
 };
 
 type Props = {

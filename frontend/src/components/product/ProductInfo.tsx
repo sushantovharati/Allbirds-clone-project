@@ -24,6 +24,7 @@ type Product = {
   sale?: boolean;
   discountPercent?: number;
   productTypes: string[];
+  category: "apparel" | "shoes" | "socks";
 };
 
 type Props = {
@@ -105,6 +106,8 @@ export default function ProductInfo({ product }: Props) {
         ? product.images[0].url
         : `http://localhost:5000${product.images[0]?.url}`,
       quantity: 1,
+
+      category: product.category,
     });
   };
 

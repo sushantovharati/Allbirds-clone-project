@@ -126,21 +126,30 @@ export class ProductsService {
   }
 
   async findProduct(search?: string) {
-    const filter: any = {};
+  const filter: any = {};
 
-    if (search && search.trim()) {
-      const regex = new RegExp(search.trim(), "i");
+  if (search && search.trim()) {
+    const searchText = search.trim();
+    const regex = new RegExp(searchText, "i");
+    const searchNumber = Number(searchText);
 
-      filter.$or = [
-        { title: regex },
-        { badge: regex },
-        { category: regex },
-        { "color.name": regex },
-        { "color.group": regex },
-      ];
-    }
+    filter.$or = [
+      { title: regex },
+      { badge: regex },
+      { category: regex },
+      { "color.name": regex },
+      { "color.group": regex },
+      { family: regex },
+      { gender: regex },
+      { edition: regex },
+      { productTypes: regex },
+      { materials: regex },
 
-    return this.productModel.find(filter).lean();
+      ...(isNaN(searchNumber) ? [] : [{ price: searchNumber }]),
+    ];
   }
+
+  return this.productModel.find(filter).lean();
+}
 
 }
