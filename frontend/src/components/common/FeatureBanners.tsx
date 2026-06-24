@@ -20,7 +20,7 @@ type FeatureBannersProps = {
 export default function FeatureBanners({ banners }: FeatureBannersProps) {
   return (
     <section className="px-3 py-3 mt-[56px]">
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3 px-[20px]">
         {banners.map((item, index) => (
           <div
             key={index}

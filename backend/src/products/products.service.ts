@@ -125,4 +125,22 @@ export class ProductsService {
     };
   }
 
+  async findProduct(search?: string) {
+    const filter: any = {};
+
+    if (search && search.trim()) {
+      const regex = new RegExp(search.trim(), "i");
+
+      filter.$or = [
+        { title: regex },
+        { badge: regex },
+        { category: regex },
+        { "color.name": regex },
+        { "color.group": regex },
+      ];
+    }
+
+    return this.productModel.find(filter).lean();
+  }
+
 }

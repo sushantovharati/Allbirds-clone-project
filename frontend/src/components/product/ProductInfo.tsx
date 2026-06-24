@@ -109,7 +109,7 @@ export default function ProductInfo({ product }: Props) {
   };
 
   return (
-    <aside className="grid grid-cols-1 gap-5 rounded-xl bg-white p-4 px-[40px] shadow-sm max-md:mx-2.5 md:sticky md:top-[112px] md:self-start">
+    <aside className="mt-[40px] grid grid-cols-1 gap-5 rounded-xl bg-white p-4 px-[40px] shadow-sm max-md:mx-2.5 md:sticky md:top-[112px] md:self-start">
       <div className="flex flex-col gap-1">
         <h1 className="font-serif text-2xl font-normal leading-tight text-black md:text-3xl">
           {product.title}

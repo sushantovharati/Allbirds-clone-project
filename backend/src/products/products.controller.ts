@@ -64,4 +64,10 @@ export class ProductsController {
   checkSlugExists(@Param('slug') slug: string) {
     return this.productsService.checkSlugExists(slug);
   }
+
+  //Search
+  @Get("search")
+  findProduct(@Query("search") search?: string) {
+    return this.productsService.findProduct(search);
+  }
 }

@@ -6,9 +6,9 @@ import ValuePillars from "@/components/home/ValuePillars";
 
 const banners = [
   {
-    title: "Spring Travel Essentials",
+    title: "Summer Travel Essentials",
     image:
-      "//www.allbirds.com/cdn/shop/files/26Q2_CanvasCruiser_SpringColor_Collections-Header_Mobile_1x1_M.jpg?v=1774909863&width=1024",
+    "https://www.allbirds.com/cdn/shop/files/26Q2_PDP_Slide_Split-Text_Desktop-Mobile_2x3_ddfea8c7-0911-4b52-9b3a-2096281b7dda.jpg?v=1775252338&width=1024",
     buttons: [
       { label: "SHOP MEN", href: "/collections/best-for-traveling-mens" },
       { label: "SHOP WOMEN", href: "/collections/best-for-traveling-womens" },
@@ -17,16 +17,16 @@ const banners = [
   {
     title: "New Arrivals",
     image:
-      "https://www.allbirds.com/cdn/shop/files/TR_NZ_750x900_46107a86-ce87-4b3b-82c3-3094c199174b.jpg?v=1752710387&width=1024",
-    buttons: [
+      "https://www.allbirds.com/cdn/shop/files/26Q2_CanvasCruiser_Site_LP_ShoppingGrid_Desktop_W_V2.jpg?v=1775592434&width=1024",
+      buttons: [
       { label: "SHOP MEN", href: "/collections/mens-new-arrivals" },
       { label: "SHOP WOMEN", href: "/collections/womens-new-arrivals" },
     ],
   },
   {
-    title: "Fresh Colors For Spring",
+    title: "Fresh Colors For Summer",
     image:
-      "https://www.allbirds.com/cdn/shop/files/26Q2_CanvasCruiser_NA_Site_Navigation_HalfTile_Desktop-Mobile_3x2_W_3df8322f-803b-4f6e-97a9-d6ad0598e8d6.jpg?v=1775603917&width=1024",
+      "https://www.allbirds.com/cdn/shop/files/23Q2-SummerLookbook-Hero-Mobile-1650___2500-2_copy.jpg?v=1751418216&width=1024",
     buttons: [
       { label: "SHOP WOMEN", href: "/collections/womens-spring-colors" },
     ],

@@ -1,6 +1,10 @@
 import Link from "next/link";
+import RelatedProductsContent from "./details-page-content/RelatedProductsContent";
 
-export default function RunnerNZContent() {
+type productprop={
+    gender?:string;
+}
+export default function RunnerNZContent({gender}:productprop) {
     return (
         <>
             <section className="m-2.5 my-10 min-h-[166px] rounded-xl bg-white p-5 md:rounded-3xl md:p-6">
@@ -146,6 +150,9 @@ export default function RunnerNZContent() {
                     </div>
                 </div>
             </section>
+            <RelatedProductsContent 
+            gender={gender}
+            productCount={6}/>
         </>
     );
 }

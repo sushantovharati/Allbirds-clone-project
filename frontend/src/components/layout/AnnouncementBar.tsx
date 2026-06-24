@@ -1,26 +1,42 @@
 "use client";
 
-import { useState } from "react";
-import { X } from "lucide-react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay, EffectFade } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/effect-fade";
+
+const announcements = [
+  "Due to increased demand, orders may take up to 2 weeks to ship.",
+  "Free ground shipping on orders over $100",
+];
 
 export default function AnnouncementBar() {
-  const [visible, setVisible] = useState(true);
-
-  if (!visible) return null;
-
   return (
-    <div className="fixed top-0 left-0 z-50 flex h-[32px] w-full items-center justify-center bg-black text-sm text-white">
-      <p className="text-center">
-        Free ground shipping on orders over $100
-      </p>
-
-      <button
-        onClick={() => setVisible(false)}
-        className="absolute right-4 opacity-60 transition-opacity hover:opacity-100"
-        aria-label="Dismiss announcement"
+    <div className="fixed left-0 top-0 z-50 h-[32px] w-full bg-black text-white">
+      <Swiper
+        modules={[Autoplay, EffectFade]}
+        slidesPerView={1}
+        loop
+        effect="fade"
+        fadeEffect={{ crossFade: true }}
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+        }}
+        className="h-full"
       >
-        <X size={14} />
-      </button>
+        {announcements.map((text, index) => (
+          <SwiperSlide
+            key={index}
+            className="!flex h-full items-center justify-center px-8"
+          >
+            <p className="text-center text-[10px] tracking-wider md:text-xs">
+              {text}
+            </p>
+          </SwiperSlide>
+        ))}
+      </Swiper>
     </div>
   );
 }
